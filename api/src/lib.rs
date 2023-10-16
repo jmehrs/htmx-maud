@@ -2,8 +2,6 @@ pub use app::init_db;
 use maud::{html, Markup, DOCTYPE};
 pub mod device;
 
-use device::components::*;
-
 pub async fn index() -> Markup {
     html! {
         (DOCTYPE)
@@ -15,11 +13,34 @@ pub async fn index() -> Markup {
                 script type="text/javascript" src="./assets/htmx.min.js" {}
                 script type="text/javascript" src="./assets/hyperscript.min.js" {}
             }
-            body class="p-2 w-screen h-screen flex flex-col gap-y-2 dark:bg-zinc-900" {
-                nav class="h-12 p-4 dark:bg-slate-700/80 rounded-lg" {}
-                main class="flex flex-grow flex-row gap-x-2" {
-                    div class="flex flex-grow p-4 bg-gradient-to-t dark:from-neutral-700/80 dark:to-slate-700/80 rounded-lg" {}
-                    div class="w-1/5 p-4 bg-gradient-to-t dark:from-neutral-700/80 dark:to-slate-700/80 rounded-lg" {}
+            body class="pl-2 pr-2 pt-2 pb-2 w-screen h-screen flex flex-col dark:bg-gray-900" {
+                nav id="nav" class="h-12 p-4 dark:bg-slate-700/75 rounded-lg" {}
+                div id="nav-toggle" class="h-2 grid place-items-center" {
+                    @let toggle_nav = r#"
+                        on click
+                            toggle .pt-2 on body then
+                            toggle .hidden on #nav
+                    "#;
+                    svg height="4" width="100" class="opacity-10 hover:opacity-100 hover:cursor-pointer transition-opacity ease-out" _=(toggle_nav) {
+                        line x1="2" y1="2" x2="98" y2="2" stroke="rgb(163,163,163)" stroke-width="4" stroke-linecap="round" {}
+                    }
+                }
+
+                main class="flex flex-grow flex-row" {
+                    div id="home" class="flex flex-grow min-w-96 p-4 bg-gradient-to-t dark:from-neutral-700/75 dark:to-slate-700/75 rounded-lg" {}
+                    div id="side-bar-toggle" class="w-2 grid place-items-center" {
+                        @let toggle_side_bar = r#"
+                            on click
+                                toggle .pr-2 on body then
+                                toggle .mr-2 on #nav then
+                                toggle .mr-2 on #nav-toggle then
+                                toggle .hidden on #side-bar
+                        "#;
+                        svg height="100" width="4" class="opacity-10 hover:opacity-100 hover:cursor-pointer transition-opacity ease-out" _=(toggle_side_bar) {
+                            line x1="2" y1="2" x2="2" y2="98" stroke="rgb(163,163,163)" stroke-width="4" stroke-linecap="round" {}
+                        }
+                    }
+                    div id="side-bar" class="w-60 lg:w-96 p-4 bg-gradient-to-t dark:from-neutral-700/75 dark:to-slate-700/75 rounded-lg" {}
                 }
             }
         }
